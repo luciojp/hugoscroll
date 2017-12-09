@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Cotidiano do A�ude Velho</title>
+    <link>https://luciojp.github.io/hugoscroll/post/</link>
+    <description>Recent content in Posts on Cotidiano do A�ude Velho</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 09 Dec 2017 12:53:37 -0300</lastBuildDate>
+    
+	<atom:link href="https://luciojp.github.io/hugoscroll/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Terceiro Post</title>
+      <link>https://luciojp.github.io/hugoscroll/post/terceiro-post/</link>
+      <pubDate>Sat, 09 Dec 2017 12:53:37 -0300</pubDate>
+      
+      <guid>https://luciojp.github.io/hugoscroll/post/terceiro-post/</guid>
+      <description>awehauiehauiheaieajkwbmdna sdawlkdjawpoda�kwlm d,aw</description>
+    </item>
+    
+    <item>
+      <title>Segundo Post</title>
+      <link>https://luciojp.github.io/hugoscroll/post/segundo-post/</link>
+      <pubDate>Sat, 09 Dec 2017 12:53:26 -0300</pubDate>
+      
+      <guid>https://luciojp.github.io/hugoscroll/post/segundo-post/</guid>
+      <description>kkkkkkkkkkkkkkkkkkawdabwugawidbawiudhauwkdhajwd</description>
+    </item>
+    
+    <item>
+      <title>Primeiro Post</title>
+      <link>https://luciojp.github.io/hugoscroll/post/primeiro-post/</link>
+      <pubDate>Sat, 09 Dec 2017 12:53:15 -0300</pubDate>
+      
+      <guid>https://luciojp.github.io/hugoscroll/post/primeiro-post/</guid>
+      <description>aehauweihaiuwehauiheiauehuaiehaiuehaiehauie</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,15 @@
+baseURL = "https://luciojp.github.io/hugoscroll/"
+
+theme="hugoscroll"
+languageCode = "en-us"
+
+title = "Cotidiano do Açude Velho"
+
+publishDir = "docs"
+
+[Params]
+  github = "luciojp"
+  email = "antonio.queiroz@ccc.ufcg.edu.br"
+  description = "aaaaaaaaaaaas sssssssssssssssssss     gggggggggggg   dffffffffffffffffff"
+  cover = "/images/background-cover.jpg"
+  logo = "/img/logo-1.jpg"
