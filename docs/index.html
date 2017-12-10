@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<meta name="generator" content="Hugo 0.30.2" />
 
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
@@ -21,11 +23,11 @@
 <body class="home-template">
 
 
-    <header id="site-head" style="background-image: url(/images/background-cover.jpg)">
+    <header id="site-head" style="background-image: url()">
         <div class="vertical">
             <div id="site-head-content" class="inner">
 
-                 <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="/img/logo-1.jpg" alt="" /></a>
+                 <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="" alt="" /></a>
                 <h1 class="blog-title">Cotidiano do Açude Velho</h1>
                 <h4 class="blog-description">
 									O açude velho é um dos principais pontos da cidade de Campina Grande.	Se você não conhece, não se preocupe, vamos te apresentar!
@@ -53,7 +55,7 @@
     <header class="post-header">
         <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/" name="inicio2">
 
-                <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="/img/logo-1.jpg" alt="" /></a>
+                <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="" alt="" /></a>
 
         </a>
     </header>
@@ -78,15 +80,15 @@
 
 
 
-                    <div class='post-holder'>
+<div class='post-holder'>
 
-<article class="post">
+	<article class="post">
 
 
     <header class="post-header">
         <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/">
 
-                <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="/img/logo-1.jpg" alt="" /></a>
+                <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="" alt="" /></a>
 
         </a>
     </header>
@@ -119,7 +121,7 @@
     <header class="post-header">
         <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/">
 
-                <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="/img/logo-1.jpg" alt="" /></a>
+                <a id="blog-logo" href="https://luciojp.github.io/hugoscroll/"><img src="" alt="" /></a>
 
         </a>
     </header>
@@ -172,6 +174,46 @@
     <script src="https://luciojp.github.io/hugoscroll//js/jquery.min.js"></script>
     <script type="text/javascript" src="https://luciojp.github.io/hugoscroll//js/index.min.js"></script>
 
+<!-- Parte relacionada ao D3 daqui pra baixo -->
+
+<script type="text/javascript">
+    "use strict"
+    function desenhaGrafico(dados) {
+     // definicoes de altura e largura do svg e da vis dentro
+      var alturaSVG = 700, larguraSVG = 700;
+      var	margin = {top: 10, right: 20, bottom:30, left: 100}, // para descolar a vis das bordas do grafico
+          larguraVis = larguraSVG - margin.left - margin.right,
+          alturaVis = alturaSVG - margin.top - margin.bottom;
+      /*
+       * Prepara onde adicionaremos a visualizacao
+       */
+      var grafico = d3.select('#chart') // cria elemento <svg> com um <g> dentro
+        .append('svg')
+          .attr('width', larguraVis + margin.left + margin.right)
+          .attr('height', alturaVis + margin.top + margin.bottom)
+        .append('g') // para entender o <g> v� em x03-detalhes-svg.html
+          .attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')');
+      /*
+       * As escalas
+       */
+      var t = ["Pedestres", "Ciclistas"];
+      var x = d3.scaleBand()
+                .domain(t)
+                .range([0,larguraVis])
+                .padding(.10);
+      var y = d3.scaleLinear()
+                .domain([-500, 500])
+                .range([0, alturaVis]);
+      /*
+       * As marcas
+       */
+
+    }
+    var dadosCSV = "dados.csv";
+    d3.csv(dadosCSV, function(dados) {
+      desenhaGrafico(dados);
+    });
+  </script>
 
 
 </body>
