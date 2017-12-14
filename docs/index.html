@@ -178,6 +178,7 @@
 
 <script type="text/javascript">
     "use strict"
+
     function desenhaGrafico(dados) {
      // definicoes de altura e largura do svg e da vis dentro
       var alturaSVG = 700, larguraSVG = 700;
@@ -196,7 +197,7 @@
       /*
        * As escalas
        */
-      var t = ["Pedestres", "Ciclistas"];
+      var t = ["Carro", "Moto", "Ônibus", "Caminhão", "Bicicleta"];
       var x = d3.scaleBand()
                 .domain(t)
                 .range([0,larguraVis])
@@ -207,6 +208,16 @@
       /*
        * As marcas
        */
+
+			   var pontoBobs = dados.filter(d => {return d.local == "bobs"});
+				 var pontoJackson = dados.filter(d => {return d.local == "jackson"});
+				 var pontoBurrinhos = dados.filter(d => {return d.local == "burrinhos"});
+
+				 console.log(pontoBobs);
+				 console.log(pontoJackson);
+				 console.log(pontoBurrinhos);
+
+
 
     }
     var dadosCSV = "dados.csv";
