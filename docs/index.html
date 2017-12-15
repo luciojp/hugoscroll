@@ -22,8 +22,7 @@
 
 <body class="home-template">
 
-
-    <header id="site-head" style="background-image: url()">
+	    <header id="site-head" style="background-image: url()">
         <div class="vertical">
             <div id="site-head-content" class="inner">
 
@@ -59,26 +58,35 @@
 
         </a>
     </header>
+
+		<p>testeeeeeeee</p>
+
 		<!--era class="post-title" -->
     <h1 class="">Quais os tipos de veículos mais presentes em cada ponto do açude velho? </h1>
 
     <section class="post-content">
-    <p>(Tipo veículo, ponto do açude, quantidade de veículos) Categóricas: 2 | Numéricas: 1</p>
-		<a href="https://vida.io/documents/ZCzewTza4ZSzMWSBG">Exemplo aqui</a>
+
+
+		<div class="container">
+	  	<div class="row">
+	  	</div>
+	  <div class="row mychart" id="chart">
+	  	</div>
+	  </div>
+
+		<div class="ladoEsquerdo">
+			<img src="/img/legandaQuestao1.png" alt="Legenda" style="float:"left";">
+		</div>
+
+
 
     </section>
 
     <footer class="post-footer">
-
-
-
     </footer>
 </article>
 </div>
 <div class='post-after'></div>
-
-
-
 
 <div class='post-holder'>
 
@@ -113,7 +121,7 @@
 
 
 
-                    <div class='post-holder'>
+          <div class='post-holder'>
 
 <article class="post">
 
@@ -153,14 +161,7 @@
         <footer class="site-footer">
         <div>
 
-
-
         <a href="https://github.com/luciojp" title="GitHub"><span class="fa fa-github fa-2x"></span></a>
-
-
-
-
-
         <a href="mailto:antonio.queiroz@ccc.ufcg.edu.br" title="Email antonio.queiroz@ccc.ufcg.edu.br"> <i class='fa fa-envelope-o fa-2x'></i></a>
 
         </div>
@@ -181,8 +182,8 @@
 
     function desenhaGrafico(dados) {
      // definicoes de altura e largura do svg e da vis dentro
-      var alturaSVG = 700, larguraSVG = 700;
-      var	margin = {top: 10, right: 20, bottom:30, left: 100}, // para descolar a vis das bordas do grafico
+      var alturaSVG = 800, larguraSVG = 500;
+      var	margin = {top: 50, right: 20, bottom:30, left: 100}, // para descolar a vis das bordas do grafico
           larguraVis = larguraSVG - margin.left - margin.right,
           alturaVis = alturaSVG - margin.top - margin.bottom;
       /*
@@ -197,33 +198,237 @@
       /*
        * As escalas
        */
-      var t = ["Carro", "Moto", "Ônibus", "Caminhão", "Bicicleta"];
+      var veiculos = ["Carro", "Moto", "Ônibus", "Caminhão", "Bicicleta"];
+
       var x = d3.scaleBand()
-                .domain(t)
+                .domain(veiculos)
                 .range([0,larguraVis])
                 .padding(.10);
       var y = d3.scaleLinear()
-                .domain([-500, 500])
+                .domain([700, 0])
                 .range([0, alturaVis]);
       /*
        * As marcas
        */
 
-			   var pontoBobs = dados.filter(d => {return d.local == "bobs"});
-				 var pontoJackson = dados.filter(d => {return d.local == "jackson"});
-				 var pontoBurrinhos = dados.filter(d => {return d.local == "burrinhos"});
+			 var dadosResp01 = d3.nest()
+			 										.key(d => d.local)
+													.rollup(function(v){ return {
+														media_carros : d3.mean(v, d => d.carros),
+														media_motos : d3.mean(v, d => d.motos),
+														media_onibus : d3.mean(v, d => d.onibus),
+														media_caminhoes : d3.mean(v, d => d.caminhoes),
+														media_ciclistas : d3.mean(v, d => d.total_ciclistas)
+														}})
+										.entries(dados)
 
-				 console.log(pontoBobs);
-				 console.log(pontoJackson);
-				 console.log(pontoBurrinhos);
+
+			console.log(dadosResp01)
 
 
+       var corBobs = '#D9D3B3'; //creme
+       var corBurrinhos = '#499B8F'; //verde
+       var corJackson = '#A63467'; //roxo
+
+			 console.log(dadosResp01[0].value.media_carros) //testando vê se imprime a média dos carros
+
+
+				grafico.selectAll('g')
+              .data(dados)
+              .enter()
+                .append('rect')
+                  .attr('x', x(veiculos[0]))
+                  .attr('width', x.bandwidth())
+                  .attr('y', y(dadosResp01[1].value.media_carros)) //carros em jackson
+                  .attr('height', dadosResp01[1].value.media_carros)
+                  .style('fill', corJackson);
+
+
+			grafico.selectAll('g')
+							.data(dados)
+							.enter()
+							.append('rect')
+							.attr('x', x(veiculos[0]))
+							.attr('width', x.bandwidth())
+							.attr('y', y(dadosResp01[2].value.media_carros)) //carros em burrinhos
+							.attr('height', dadosResp01[2].value.media_carros)
+							.style('fill', corBurrinhos);
+
+			grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+							 .append('rect')
+								 .attr('x', x(veiculos[0])) //carros
+								 .attr('width', x.bandwidth())
+								 .attr('y', y(dadosResp01[0].value.media_carros)) //tudo o que tem carros | carrosBobs
+								 .attr('height', dadosResp01[0].value.media_carros)
+								 .style('fill', corBobs);
+
+							// Moto para baixo
+
+
+
+			 grafico.selectAll('g')
+							 .data(dados)
+							 .enter()
+								 .append('rect')
+									 .attr('x', x(veiculos[1]))
+									 .attr('width', x.bandwidth())
+									 .attr('y', y(dadosResp01[1].value.media_motos))
+									 .attr('height', dadosResp01[1].value.media_motos)
+									 .style('fill', corJackson);
+
+
+			 grafico.selectAll('g')
+							 .data(dados)
+							 .enter()
+							 .append('rect')
+							 .attr('x', x(veiculos[1]))
+							 .attr('width', x.bandwidth())
+							 .attr('y', y(dadosResp01[2].value.media_motos))
+							 .attr('height', dadosResp01[2].value.media_motos)
+							 .style('fill', corBurrinhos);
+
+			 grafico.selectAll('g')
+			 .data(dados)
+			 .enter()
+			 .append('rect')
+			 .attr('x', x(veiculos[1]))
+			 .attr('width', x.bandwidth())
+			 .attr('y', y(dadosResp01[0].value.media_motos))
+			 .attr('height', dadosResp01[0].value.media_motos)
+			 .style('fill', corBobs);
+							 //onibus para baixo
+
+
+
+ 			 grafico.selectAll('g')
+ 							 .data(dados)
+ 							 .enter()
+ 								 .append('rect')
+ 									 .attr('x', x(veiculos[2]))
+ 									 .attr('width', x.bandwidth())
+ 									 .attr('y', y(dadosResp01[1].value.media_onibus))
+ 									 .attr('height', dadosResp01[1].value.media_onibus)
+ 									 .style('fill', corJackson);
+
+
+ 			 grafico.selectAll('g')
+ 							 .data(dados)
+ 							 .enter()
+ 							 .append('rect')
+ 							 .attr('x', x(veiculos[2]))
+ 							 .attr('width', x.bandwidth())
+ 							 .attr('y', y(dadosResp01[2].value.media_onibus))
+ 							 .attr('height', dadosResp01[2].value.media_onibus)
+ 							 .style('fill', corBurrinhos);
+
+			 grafico.selectAll('g')
+			 .data(dados)
+			 .enter()
+			 .append('rect')
+			 .attr('x', x(veiculos[2]))
+			 .attr('width', x.bandwidth())
+			 .attr('y', y(dadosResp01[0].value.media_onibus))
+			 .attr('height', dadosResp01[0].value.media_onibus)
+			 .style('fill', corBobs);
+							 //caminhao para baixo
+
+			 grafico.selectAll('g')
+			 			.data(dados)
+			 			.enter()
+			 				.append('rect')
+			 					.attr('x', x(veiculos[3]))
+			 					.attr('width', x.bandwidth())
+			 					.attr('y', y(dadosResp01[0].value.media_caminhoes))
+			 					.attr('height', dadosResp01[0].value.media_caminhoes)
+			 					.style('fill', corBobs);
+
+
+			 grafico.selectAll('g')
+			 				.data(dados)
+			 				.enter()
+			 					.append('rect')
+			 						.attr('x', x(veiculos[3]))
+			 						.attr('width', x.bandwidth())
+			 						.attr('y', y(dadosResp01[1].value.media_caminhoes))
+			 						.attr('height', dadosResp01[1].value.media_caminhoes)
+			 						.style('fill', corJackson);
+
+
+			 grafico.selectAll('g')
+			 				.data(dados)
+			 				.enter()
+			 				.append('rect')
+			 				.attr('x', x(veiculos[3]))
+			 				.attr('width', x.bandwidth())
+			 				.attr('y', y(dadosResp01[2].value.media_caminhoes))
+			 				.attr('height', dadosResp01[2].value.media_caminhoes)
+			 				.style('fill', corBurrinhos);
+
+							//bicicleta daqui pra baixo
+
+			grafico.selectAll('g')
+					 .data(dados)
+					 .enter()
+						 .append('rect')
+							 .attr('x', x(veiculos[4]))
+							 .attr('width', x.bandwidth())
+							 .attr('y', y(dadosResp01[0].value.media_ciclistas))
+							 .attr('height', dadosResp01[0].value.media_ciclistas)
+							 .style('fill', corBobs);
+
+
+			grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+							 .append('rect')
+								 .attr('x', x(veiculos[4]))
+								 .attr('width', x.bandwidth())
+								 .attr('y', y(dadosResp01[1].value.media_ciclistas))
+								 .attr('height', dadosResp01[1].value.media_ciclistas)
+								 .style('fill', corJackson);
+
+
+			grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+						 .append('rect')
+						 .attr('x', x(veiculos[4]))
+						 .attr('width', x.bandwidth())
+						 .attr('y', y(dadosResp01[2].value.media_ciclistas))
+						 .attr('height', dadosResp01[2].value.media_ciclistas)
+						 .style('fill', corBurrinhos);
+
+
+
+        /*
+       * Os eixos
+       */
+      grafico.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + alturaVis + ")")
+              .call(d3.axisBottom(x)); // magica do d3: gera eixo a partir da escala
+
+      grafico.append('g')
+              .attr('transform', 'translate(0,0)')
+              .call(d3.axisLeft(y))  // gera eixo a partir da escala
+
+      grafico.append("text")
+        .attr("transform", "translate(-50," + (alturaVis + margin.top)/2 + ") rotate(-90)")
+        .text("Quantidade contabilizada");
 
     }
+
     var dadosCSV = "dados.csv";
+
     d3.csv(dadosCSV, function(dados) {
       desenhaGrafico(dados);
     });
+
+
+
+
   </script>
 
 
