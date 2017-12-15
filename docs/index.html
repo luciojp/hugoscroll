@@ -148,14 +148,21 @@
         </a>
     </header>
 		<!--era class="post-title" -->
-    <h1 class="">Observando as pessoas que andam a pé ou de bicileta, existe algum horário em que
-			existe predominância de algum sexo?</h1>
+    <h1 class="">Observando as pessoas que andam a pé ou de bicileta, existe algum horário em que existe predominância de algum sexo?</h1>
 
 
     <section class="post-content">
-    <p>Sexo, horário, quantidade de pedestres/ciclistas.
-			Categóricas: 2 (Sexo, pedestre/ciclista)
-			Numéricas: 2 (Horário e Quantidade de pedestres/ciclistas)</p>
+
+			<div class="container">
+		  	<div class="row">
+		  	</div>
+		  <div class="row mychart" id="chart3">
+		  	</div>
+		  </div>
+
+			<div class="ladoEsquerdo">
+				<img src="/hugoscroll/img/legandaQuestao2.png" alt="Legendas" style="float:left";>
+			</div>
 
     </section>
 
@@ -529,6 +536,187 @@
 
 	}
 
+
+	function desenhaGrafico3(dados) {
+		// definicoes de altura e largura do svg e da vis dentro
+		 var alturaSVG = 650, larguraSVG = 700;
+		 var	margin = {top: 10, right: 20, bottom:30, left: 200}, // para descolar a vis das bordas do grafico
+				 larguraVis = larguraSVG - margin.left - margin.right,
+				 alturaVis = alturaSVG - margin.top - margin.bottom;
+		 /*
+			* Prepara onde adicionaremos a visualizacao
+			*/
+		 var grafico = d3.select('#chart3') // cria elemento <svg> com um <g> dentro
+			 .append('svg')
+				 .attr('width', larguraVis + margin.left + margin.right)
+				 .attr('height', alturaVis + margin.top + margin.bottom)
+			 .append('g') // para entender o <g> v� em x03-detalhes-svg.html
+				 .attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')');
+		 /*
+			* As escalas
+			*/
+		 var t = ["Pedestres", "Ciclistas"];
+		 var x = d3.scaleBand()
+							 .domain(t)
+							 .range([0,larguraVis])
+							 .padding(.10);
+		 var y = d3.scaleLinear()
+							 .domain([-500, 500])
+							 .range([0, alturaVis]);
+		 /*
+			* As marcas
+			*/
+			var turnoManha = dados.filter(d => {return d.horario_inicial.slice(0,2) < 12});
+			var turnoTarde = dados.filter(d => {return d.horario_inicial.slice(0,2) >= 12 && d.horario_inicial.slice(0,2) < 18});
+			var turnoNoite = dados.filter(d => {return d.horario_inicial.slice(0,2) >= 18});
+
+			var peso = 30;
+			var turnoManhaMulherPedestre =  turnoManha.map(e => parseInt(e.mulheres_pedestres)).reduce((a,e) => (a + e)) / peso;
+			var turnoTardeMulherPedestre =  turnoTarde.map(e => parseInt(e.mulheres_pedestres)).reduce((a,e) => (a + e)) / peso;
+			var turnoNoiteMulherPedestre =  turnoNoite.map(e => parseInt(e.mulheres_pedestres)).reduce((a,e) => (a + e)) / peso;
+			var turnoManhaMulherCiclista =  turnoManha.map(e => parseInt(e.mulheres_ciclistas)).reduce((a,e) => (a + e)) / peso;
+			var turnoTardeMulherCiclista =  turnoTarde.map(e => parseInt(e.mulheres_ciclistas)).reduce((a,e) => (a + e)) / peso;
+			var turnoNoiteMulherCiclista =  turnoNoite.map(e => parseInt(e.mulheres_ciclistas)).reduce((a,e) => (a + e)) / peso;
+			var turnoManhaHomemPedestre =  turnoManha.map(e => parseInt(e.homens_pedestres)).reduce((a,e) => (a + e)) / peso;
+			var turnoTardeHomemPedestre =  turnoTarde.map(e => parseInt(e.homens_pedestres)).reduce((a,e) => (a + e)) / peso;
+			var turnoNoiteHomemPedestre =  turnoNoite.map(e => parseInt(e.homens_pedestres)).reduce((a,e) => (a + e)) / peso;
+			var turnoManhaHomemCiclista =  turnoManha.map(e => parseInt(e.homens_ciclistas)).reduce((a,e) => (a + e)) / peso;
+			var turnoTardeHomemCiclista =  turnoTarde.map(e => parseInt(e.homens_ciclistas)).reduce((a,e) => (a + e)) / peso;
+			var turnoNoiteHomemCiclista =  turnoNoite.map(e => parseInt(e.homens_ciclistas)).reduce((a,e) => (a + e)) / peso;
+
+			var corManha = '#D9D3B3'; //cinza
+			var corTarde = '#499B8F'; //azul
+			var corNoite = '#A63467'; //roxo
+	 //tarde mulher pedestre
+		grafico.selectAll('g')
+				 .data(dados)
+				 .enter()
+				 .append('circle')
+				 .attr('r', turnoTardeMulherPedestre)
+				 .attr('cx', x(t[0]))
+				 .attr('cy', 150)
+				 .style('fill', corTarde);
+//manhã mulher pedestre
+	 grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+						 .append('circle')
+						 .attr('r', turnoManhaMulherPedestre)
+						 .attr('cx', x(t[0]))
+						 .attr('cy', 150)
+						 .style('fill', corManha);
+
+	 //noite mulher pedestre
+		grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+							 .append('circle')
+								 .attr('r', turnoNoiteMulherPedestre)
+								 .attr('cx', x(t[0]))
+								 .attr('cy', 150)
+								 .style('fill', corNoite);
+
+	 //tarde mulher ciclista
+		grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+						 .append('circle')
+						 .attr('r', turnoTardeMulherCiclista)
+						 .attr('cx', x(t[1]))
+						 .attr('cy', 150)
+						 .style('fill', corTarde);
+//manha mulher ciclista
+		grafico.selectAll('g')
+				 .data(dados)
+				 .enter()
+				 .append('circle')
+				 .attr('r', turnoManhaMulherCiclista)
+				 .attr('cx', x(t[1]))
+				 .attr('cy', 150)
+				 .style('fill', corManha);
+	 //noite mulher ciclista
+		grafico.selectAll('g')
+				 .data(dados)
+				 .enter()
+				 .append('circle')
+				 .attr('r', turnoNoiteMulherCiclista)
+				 .attr('cx', x(t[1]))
+				 .attr('cy', 150)
+				 .style('fill', corNoite);
+	 //tarde homem pedestre
+		grafico.selectAll('g')
+				 .data(dados)
+				 .enter()
+				 .append('circle')
+				 .attr('r', turnoTardeHomemPedestre)
+				 .attr('cx', x(t[0]))
+				 .attr('cy', 400)
+				 .style('fill', corTarde);
+		 //noite homem pedestre
+		 grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+						 .append('circle')
+						 .attr('r', turnoNoiteHomemPedestre)
+						 .attr('cx', x(t[0]))
+						 .attr('cy', 400)
+						 .style('fill', corNoite);
+	 //manha homem pedestre
+		grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+						 .append('circle')
+						 .attr('r', turnoManhaHomemPedestre)
+						 .attr('cx', x(t[0]))
+						 .attr('cy', 400)
+						 .style('fill', corManha);
+	 //manha homem ciclista
+		grafico.selectAll('g')
+				 .data(dados)
+				 .enter()
+				 .append('circle')
+				 .attr('r', turnoManhaHomemCiclista)
+				 .attr('cx', x(t[1]))
+				 .attr('cy', 400)
+				 .style('fill', corManha);
+		 //tarde homem ciclista
+		 grafico.selectAll('g')
+						 .data(dados)
+						 .enter()
+						 .append('circle')
+						 .attr('r', turnoTardeHomemCiclista)
+						 .attr('cx', x(t[1]))
+						 .attr('cy', 400)
+						 .style('fill', corTarde);
+		 //noite homem ciclista
+		grafico.selectAll('g')
+				 .data(dados)
+				 .enter()
+				 .append('circle')
+				 .attr('r', turnoNoiteHomemCiclista)
+				 .attr('cx', x(t[1]))
+				 .attr('cy', 400)
+				 .style('fill', corNoite);
+
+		 grafico.append("text")
+			 .attr("transform", "translate(-20," + (alturaVis + margin.top)/12 + ")")
+			 .text("Pedestres")
+			 .style('font-size', '20');
+		 grafico.append("text")
+			 .attr("transform", "translate(250," + (alturaVis + margin.top)/12 + ")")
+			 .text("Ciclistas")
+			 .style('font-size', '20');
+		 grafico.append("text")
+			 .attr("transform", "translate(400," + (alturaVis + margin.top)*0.23 + ")")
+			 .text("Mulheres")
+			 .style('font-size', '20');
+		 grafico.append("text")
+			 .attr("transform", "translate(400," + (alturaVis + margin.top)*0.6 + ")")
+			 .text("Homens")
+			 .style('font-size', '20');
+
+	 }
+
     var dadosCSV = "dados.csv";
 
     d3.csv(dadosCSV, function(dados) {
@@ -537,6 +725,10 @@
 
 		d3.csv(dadosCSV, function(dados) {
 			desenhaGrafico2(dados);
+		});
+
+		d3.csv(dadosCSV, function(dados) {
+			desenhaGrafico3(dados);
 		});
 
 
