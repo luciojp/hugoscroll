@@ -82,9 +82,11 @@
 	  	</div>
 	  </div>
 
+
 		<div class="ladoEsquerdo">
 			<img src="/hugoscroll/img/legandaQuestao1.png" alt="Legendas" style="float:left";>
 		</div>
+
 
     </section>
 
@@ -112,8 +114,12 @@
     <h1 class="">Em que horário cada tipo de veículo (incluindo bicicleta) é mais presente?</h1>
 
     <section class="post-content">
-    <p>(Tipo veículo, horário, quantidade de veículo) Categóricas: 1 | Numéricas: 2</p>
-		<a href="https://dataaddict.fr/prenoms/#alban-h,albane-f,albert-h">Exemplo aqui</a>
+			<div class="container">
+		  	<div class="row">
+		  	</div>
+		  <div class="row mychart" id="chart2">
+		  	</div>
+		  </div>
 
     </section>
 
@@ -188,7 +194,9 @@
 <script type="text/javascript">
     "use strict"
 
-    function desenhaGrafico(dados) {
+		<!-- PRIMEIRO GRAFICO DAQUI PRA BAIXO -->
+
+    function desenhaGrafico1(dados) {
      // definicoes de altura e largura do svg e da vis dentro
       var alturaSVG = 800, larguraSVG = 500;
       var	margin = {top: 50, right: 20, bottom:30, left: 100}, // para descolar a vis das bordas do grafico
@@ -230,16 +238,9 @@
 														}})
 										.entries(dados)
 
-
-			console.log(dadosResp01)
-
-
        var corBobs = '#D9D3B3'; //creme
        var corBurrinhos = '#499B8F'; //verde
        var corJackson = '#A63467'; //roxo
-
-			 console.log(dadosResp01[0].value.media_carros) //testando vê se imprime a média dos carros
-
 
 				grafico.selectAll('g')
               .data(dados)
@@ -428,12 +429,115 @@
 
     }
 
+
+		function desenhaGrafico2(dados) {
+
+			var margin = {top: 20, right: 20, bottom: 30, left: 50},
+	    width = 960 - margin.left - margin.right,
+	    height = 600 - margin.top - margin.bottom;
+
+			// set the ranges
+			var x = d3.scaleLinear().range([0, width]);
+			var y = d3.scaleLinear().range([height, 0]);
+
+      /*
+       * Prepara onde adicionaremos a visualizacao
+       */
+
+			 var grafico2 = d3.select("#chart2").append("svg")
+			     .attr("width", width + margin.left + margin.right)
+			     .attr("height", height + margin.top + margin.bottom)
+			   .append("g")
+			     .attr("transform",
+			           "translate(" + margin.left + "," + margin.top + ")");
+
+			/*
+			* As marcas
+			*/
+
+			var dadosResp02 = d3.nest()
+													.key(d => d.horario_inicial.split(":")[0]) //pega a Hora
+													.rollup(function(v){ return {
+														soma_carros : d3.sum(v, d => d.carros),
+														soma_motos : d3.sum(v, d => d.motos),
+														soma_onibus : d3.sum(v, d => d.onibus),
+														soma_caminhoes : d3.sum(v, d => d.caminhoes),
+														soma_ciclistas : d3.sum(v, d => d.total_ciclistas)
+													}})
+													.entries(dados)
+
+			console.log(dadosResp02)
+
+			/*
+			 * As escalas
+			 */
+			var horas = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+
+
+
+				var carros = []
+				var carrosValor = []
+				var motos = []
+				var onibus = []
+				var caminhoes = []
+				var ciclistas = []
+
+			for(var i=0; i < dadosResp02.length; i++) {
+					carros.push({hora:horas[i], valor:dadosResp02[i].value.soma_carros})
+					carrosValor.push(dadosResp02[i].value.soma_carros)
+					motos.push({hora:horas[i], valor:dadosResp02[i].value.soma_motos})
+					onibus.push({hora:horas[i], valor:dadosResp02[i].value.soma_onibus})
+					caminhoes.push({hora:horas[i], valor:dadosResp02[i].value.soma_caminhoes})
+					ciclistas.push({hora:horas[i], valor:dadosResp02[i].value.soma_ciclistas})
+				}
+
+			console.log(carros)
+
+			x.domain(d3.extent(carros, function(d) { return parseInt(d.hora); }));
+		  y.domain([0, d3.max(carros, function(d) { return Math.max(d.valor); })]);
+
+
+		// define lines
+		var linhaCarros = d3.line()
+		    .x(function(d) { return x(parseInt(carros.hora)); })
+		    .y(function(d) { return y(carros.valor); });
+
+
+				console.log("chegou aqui");
+
+
+
+
+
+				// Add the valuelines path.
+		 grafico2.append("path")
+				 .data(carrosValor)
+				 .attr("class", "line")
+				 .style("stroke", "#F5F3FF")
+				 .attr("d", linhaCarros);
+
+
+				 // Add the Axis
+		 grafico2.append("g")
+						 	.attr("class", "x axis")
+							.attr("transform", "translate(0," + height + ")")
+							.call(d3.axisBottom(x)); // magica do d3: gera eixo a partir da escala
+		grafico2.append('g')
+	         .attr('transform', 'translate(0,0)')
+	         .call(d3.axisLeft(y))  // gera eixo a partir da escala
+
+
+	}
+
     var dadosCSV = "dados.csv";
 
     d3.csv(dadosCSV, function(dados) {
-      desenhaGrafico(dados);
+      desenhaGrafico1(dados);
     });
 
+		d3.csv(dadosCSV, function(dados) {
+			desenhaGrafico2(dados);
+		});
 
 
 
